@@ -1,14 +1,14 @@
 const router = require("express").Router();
 const bcrypt = require('bcryptjs');
-//const jokes = require("../users/users-model");
-//const tokenBuilder = require('./token-builder')
+const Users = require("../users/users-model");
+const tokenBuilder = require('../auth/token-builder')
 const { restricted} = require('../middleware/restricted');
 const { JWT_SECRET } = require("../secrets"); // use this secret!
 
 
 
-router.post('/register', (req, res) => {
-  res.end('implement register, please!');
+router.post('/register', (req, res, next) => {
+  
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -34,10 +34,28 @@ router.post('/register', (req, res) => {
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
+ let user ={
+  username :req.body.username,
+  password: req.body.password,
+}
+// bcrypting the password before saving
+const rounds = process.env.BCRYPT_ROUNDS || 8; // 2 ^ 8
+const hash = bcrypt.hashSync(user.password, rounds);
+
+// never save the plain text password in the db
+user.password = hash
+
+Users.add(user)
+  .then(saved => {
+    res.status(201).json(saved);
+  })
+  .catch(next);
+  
+  //res.end('implement register, please!');
 });
 
-router.post('/login', (req, res) => {
-  res.end('implement login, please!');
+router.post('/login', (req, res, next) => {
+  // res.end('implement login, please!');
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -61,6 +79,22 @@ router.post('/login', (req, res) => {
     4- On FAILED login due to `username` not existing in the db, or `password` being incorrect,
       the response body should include a string exactly as follows: "invalid credentials".
   */
+ let { username, password } = req.body;
+  Users.findBy({ username }) 
+    .then(([user]) => {
+      if (user && bcrypt.compareSync(password, user.password)) {
+        // generate a token and send it back
+        const token = tokenBuilder(user)
+        // the client will provide token in future requests
+        res.status(200).json({
+          message: `welcome, ${user.username}`,
+          token,
+        });
+      } else {
+        next({ status: 401, message: 'invalid credentials' });
+      }
+    })
+    .catch(next);
 });
 
 module.exports = router;
