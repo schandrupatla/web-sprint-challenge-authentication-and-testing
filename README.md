@@ -62,6 +62,19 @@ Your finished project must include all of the following requirements (further in
 Be prepared to demonstrate your understanding of this week's concepts by answering questions on the following topics.
 
 1. Differences between using _sessions_ or _JSON Web Tokens_ for authentication.
+    Both cookies and bearer tokens send data. One difference is that cookies are for sending and storing arbitrary data, whereas bearer tokens are specifically for sending authorization data. That data is often encoded as a JWT.
+    cookies hold session_id which helps to communicate client to server. Sessions are stored on server and this is called stateful authentication
+    Tokens are stored on client and its called stateless authentication
 2. What does `bcryptjs` do to help us store passwords in a secure manner?
+    bcryptjs uses Salted hashing — Generating random bytes (the salt) and combining it with the password before hashing creates unique hashes across each user's password.
+    Asynchronously compares the given data against the given hash. Asynchronously generates a salt. Synchronously generates a hash for the given string. Synchronously tests a string against a hash.
 3. How are unit tests different from integration and end-to-end testing?
+    Unit testing efficiently checks for the functions or calculations that provide resulting data—a numerical value, a text string, etc. End-to-end testing tests all layers of the application at once; it's best-suited to make sure buttons, forms, changes, links, and generally entire workflows function without problems.
 4. How does _Test Driven Development_ change the way we write applications and tests?
+    It promotes confirmatory testing of your application code and detailed specification.
+    Both acceptance test (detailed requirements) and developer tests (unit test) are inputs for TDD.
+    TDD makes the code simpler and clear. It allows the developer to maintain less documentation.
+    3 steps:
+        1.write unit tests
+        2.write code to pass the test cases
+        3.refactor the code
