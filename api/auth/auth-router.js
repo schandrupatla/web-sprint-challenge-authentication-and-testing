@@ -2,12 +2,14 @@ const router = require("express").Router();
 const bcrypt = require('bcryptjs');
 const Users = require("../users/users-model");
 const tokenBuilder = require('../auth/token-builder')
-const { restricted} = require('../middleware/restricted');
-const { JWT_SECRET } = require("../secrets"); // use this secret!
+const { checkPayload,
+        checkUsernameExists,
+        checkUsernameFree} = require('../middleware/auth-middleware');
+//const { JWT_SECRET } = require("../secrets"); // use this secret!
 
 
 
-router.post('/register', (req, res, next) => {
+router.post('/register', checkPayload , checkUsernameFree , (req, res, next) => {
   
   /*
     IMPLEMENT
@@ -54,7 +56,7 @@ Users.add(user)
   //res.end('implement register, please!');
 });
 
-router.post('/login', (req, res, next) => {
+router.post('/login',checkPayload , checkUsernameExists , (req, res, next) => {
   // res.end('implement login, please!');
   /*
     IMPLEMENT
