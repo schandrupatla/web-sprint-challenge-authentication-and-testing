@@ -5,9 +5,6 @@ const tokenBuilder = require('../auth/token-builder')
 const { checkPayload,
         checkUsernameExists,
         checkUsernameFree} = require('../middleware/auth-middleware');
-//const { JWT_SECRET } = require("../secrets"); // use this secret!
-
-
 
 router.post('/register', checkPayload , checkUsernameFree , (req, res, next) => {
   

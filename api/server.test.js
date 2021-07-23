@@ -1,7 +1,6 @@
 const request = require("supertest");
 const db = require("../data/dbConfig");
 const server = require("./server");
-const User = require("./users/users-model");
 const bcrypt = require('bcryptjs')
 
 // Write your tests here
@@ -24,7 +23,6 @@ describe('[POST] /api/auth/register', () => {
     })
     expect(res.status).toBe(201)
   })
-  
   test('saves the user with a bcrypted password instead of plain text', async () => {
     await request(server).post('/api/auth/register').send({ username: 'smith', password: '1234' })
     const res = await db('users').where('username', 'smith').first()
@@ -34,15 +32,7 @@ describe('[POST] /api/auth/register', () => {
     const res = await request(server).post('/api/auth/register').send({ username: 'akhil', password: '1234' })
     expect(res.body).toMatchObject({ id: 3, username: 'akhil' })
   })
-  // test('responds with newly created user', async () => {
-  //    await request(server).post('/api/auth/register').send({
-  //     username: 'sri', password:"1234"
-  //   })
-  //   const res = await db('users').where('username', 'sri').first()
-  //   expect(res.body).toMatchObject({ id: 4, username: 'sri'})
-  // })
 })
-
 
 describe('[POST] /api/auth/login', () => {
   test('responds with the correct message on valid credentials', async () => {
@@ -57,6 +47,7 @@ describe('[POST] /api/auth/login', () => {
     expect(res.status).toBe(401)
   })
 })
+
 describe('[GET] /api/jokes', () => {
   test('requests without a token are bounced with proper status and message', async () => {
     const res = await request(server).get('/api/jokes')
