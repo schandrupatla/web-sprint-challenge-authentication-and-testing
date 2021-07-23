@@ -1,4 +1,11 @@
-const router = require('express').Router();
+const router = require("express").Router();
+const bcrypt = require('bcryptjs');
+//const jokes = require("../users/users-model");
+//const tokenBuilder = require('./token-builder')
+const { restricted} = require('../middleware/restricted');
+const { JWT_SECRET } = require("../secrets"); // use this secret!
+
+
 
 router.post('/register', (req, res) => {
   res.end('implement register, please!');
